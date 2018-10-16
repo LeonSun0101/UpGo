@@ -51,6 +51,7 @@ class PyTorchDataset(Dataset):
         image = self.DataProcessor.image_resize(image)
         if self.is_train_set and self.config['data_aug']:
             image = self.DataProcessor.data_aug(image)
+            image = self.DataProcessor.image_resize(image)
         image = self.DataProcessor.input_norm(image)
         return image
 

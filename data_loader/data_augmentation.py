@@ -42,7 +42,7 @@ class DataAugmenters:
             Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue,
             IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, IAAPiecewiseAffine,
             IAASharpen, IAAEmboss, RandomContrast, RandomBrightness, Flip, OneOf, Compose, JpegCompression,
-            DualTransform)
+            DualTransform,RandomCrop,CenterCrop)
         return Compose([
             RandomRotate90(),
             Flip(),
@@ -70,6 +70,10 @@ class DataAugmenters:
                 RandomBrightness(),
             ], p=0.3),
             HueSaturationValue(p=0.3),
+            OneOf([
+                RandomCrop(width=100, height=100),
+                CenterCrop(width=100, height=100),
+            ], p=0.5),
         ], p=p)
 
 
