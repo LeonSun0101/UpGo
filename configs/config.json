@@ -1,6 +1,6 @@
 {
-  "model_module_name": "resnet_module",
-  "model_net_name": "resnet50",
+  "model_module_name": "se_resnet",
+  "model_net_name": "se_resnet50",
   "gpu_id": "3",
   "async_loading": true,
   "is_tensorboard": true,
@@ -15,22 +15,22 @@
   "num_classes": 61,
   "batch_size": 8,
   "dataloader_workers": 10,
-  "learning_rate": 1e-4,
-  "learning_rate_decay": 0.9,
-  "learning_rate_decay_epoch": 100,
+  "learning_rate": 0.005,
+  "learning_rate_decay": 0.5,
+  "learning_rate_decay_epoch": 10,
 
   "train_mode": "fromscratch",
   "file_label_separator": "----",
-  "pretrained_path": "/home1/sas/pretrain_model/pytorch",
-  "pretrained_file": "inceptionresnetv2-520b38e4.pth",
-  "save_path": "/home1/sas/results_model/pytorch",
+  "pretrained_path": "/home/shuli/Documents/ML_dd",
+  "pretrained_file": "se_resnet50-ce0d4300.pth",
+  "save_path": "/home/shuli/Documents/ML_dd/ai_challenger_data/model",
   "save_name": "model.pth",
   "train_eval_best":"train_eval_best.pth",
   "val_eval_best":"val_eval_best.pth",
 
-  "val_data_root_dir": "/home1/sas/datasets/ai_challenger_pdr2018_validationset_20180905/AgriculturalDisease_validationset/images",
-  "train_data_root_dir": "/home1/sas/datasets/ai_challenger_pdr2018_trainingset_20180905/AgriculturalDisease_trainingset/images",
-  "val_data_file": "/home1/sas/datasets/ai_challenger_pdr2018_validationset_20180905/AgriculturalDisease_validationset/AgriculturalDisease_validation_annotations.json",
-  "train_data_file": "/home1/sas/datasets/ai_challenger_pdr2018_trainingset_20180905/AgriculturalDisease_trainingset/AgriculturalDisease_train_annotations.json"
+  "val_data_root_dir": "/home/shuli/Documents/ML_dd/ai_challenger_data/data/valid_set/AgriculturalDisease_validationset/images",
+  "train_data_root_dir": "/home/shuli/Documents/ML_dd/ai_challenger_data/data/train_set/AgriculturalDisease_trainingset/images",
+  "val_data_file": "/home/shuli/Documents/ML_dd/ai_challenger_data/data/valid_set/AgriculturalDisease_validationset/AgriculturalDisease_validation_annotations.json",
+  "train_data_file": "/home/shuli/Documents/ML_dd/ai_challenger_data/data/train_set/AgriculturalDisease_trainingset/AgriculturalDisease_train_annotations.json"
 
 }

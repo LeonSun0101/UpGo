@@ -100,6 +100,7 @@ class ExampleTrainer(BaseTrainer,object):
         if torch.cuda.device_count() > 1:
             print('optimizer device_count: ',torch.cuda.device_count())
             self.optimizer = nn.DataParallel(self.optimizer,device_ids=range(torch.cuda.device_count()))
+
         """
         # optimizing parameters seperately
         ignored_params = list(map(id, self.model.net.fc.parameters()))
