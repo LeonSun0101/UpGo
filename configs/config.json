@@ -8,7 +8,7 @@
   "shuffle": true,
   "data_aug": true,
 
-  "num_epochs": 600,
+  "num_epochs": 100,
   "img_height": 224,
   "img_width": 224,
   "num_channels": 3,
