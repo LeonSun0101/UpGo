@@ -1,5 +1,5 @@
 {
-  "model_module_name": "se_resnet",
+  "model_module_name": "senet_module",
   "model_net_name": "se_resnet50",
   "gpu_id": "0",
   "async_loading": true,
@@ -13,11 +13,11 @@
   "img_width": 224,
   "num_channels": 3,
   "num_classes": 61,
-  "batch_size": 8,
+  "batch_size": 32,
   "dataloader_workers": 10,
-  "learning_rate": 0.005,
-  "learning_rate_decay": 0.5,
-  "learning_rate_decay_epoch": 10,
+  "learning_rate": 1e-4,
+  "learning_rate_decay": 0.9,
+  "learning_rate_decay_epoch": 20,
 
   "train_mode": "fromscratch",
   "file_label_separator": "----",
