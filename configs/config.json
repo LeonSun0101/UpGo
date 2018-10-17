@@ -1,7 +1,7 @@
 {
   "model_module_name": "se_resnet",
   "model_net_name": "se_resnet50",
-  "gpu_id": "3",
+  "gpu_id": "0",
   "async_loading": true,
   "is_tensorboard": true,
   "evaluate_before_train": true,
