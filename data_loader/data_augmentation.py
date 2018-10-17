@@ -71,10 +71,7 @@ class DataAugmenters:
                 RandomBrightness(),
             ], p=0.3),
             HueSaturationValue(p=0.3),
-            OneOf([
-                RandomCrop(width=224, height=224),
-                CenterCrop(width=224, height=224),
-            ], p=0.5),
+            RandomCrop(width=224, height=224)
         ], p=p)
 
 
