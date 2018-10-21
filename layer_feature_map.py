@@ -43,7 +43,9 @@ if __name__ == '__main__':
     #获得指定layer的feature
     feature_data = get_layer_feature(layer='avgpool',model=model,data_loader=train_loader,shape=shape)
 
-    #save
-    json.dump(feature_data,open(os.getcwd()+feature_save_file))
+    X = [feature_data['features'][i].reshape(2048).tolist() for i in range(len(feature_data['features']))]
+    Y = [feature_data['labels'][i].tolist() for i in range(len(feature_data['labels']))]
+
+    json.dump({'X':X,'Y':Y},open(os.getcwd()+feature_save_file,'w'))
 
 
