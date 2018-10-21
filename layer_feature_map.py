@@ -46,6 +46,6 @@ if __name__ == '__main__':
     X = [feature_data['features'][i].reshape(2048).tolist() for i in range(len(feature_data['features']))]
     Y = [feature_data['labels'][i].tolist() for i in range(len(feature_data['labels']))]
 
-    json.dump({'X':X,'Y':Y},open(os.getcwd()+feature_save_file,'w'))
+    json.dump({'X':X,'Y':Y},open(os.getcwd()+'/'+feature_save_file,'w'))
 
 
