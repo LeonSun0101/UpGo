@@ -51,8 +51,8 @@ class ImageClassificationPytorch:
 
 def main():
     global_value._init()
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
+    # reload(sys)
+    # sys.setdefaultencoding("utf-8")
     imageClassificationPytorch = ImageClassificationPytorch(config)
     imageClassificationPytorch.run()
     imageClassificationPytorch.close()

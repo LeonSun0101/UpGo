@@ -18,6 +18,8 @@ class BaseTrainer:
         self.eval_validate = 0.
         self.optimizer = None
         self.loss = None
+        self.data = []
+        self.pred = []
 
 
     def train(self):
@@ -38,7 +40,7 @@ class BaseTrainer:
                                                      self.train_losses.avg,  self.eval_losses.avg,
                                                      time.time()-epoch_start_time)
             # save model
-            self.model.save_check_point(self.cur_epoch)
+            # self.model.save_check_point(self.cur_epoch)
             # logger
             self.logger.write_info_to_logger(variable_dict={'epoch':self.cur_epoch, 'lr':self.learning_rate,
                                                             'train_acc':self.eval_train,'validate_acc':self.eval_validate,
@@ -70,6 +72,11 @@ class BaseTrainer:
                                                  summaries_dict={'validate_acc': self.eval_validate,'validate_avg_loss': self.eval_losses.avg})
                 # if self.cur_epoch == total_epoch_num:
                 #     self.logger.summarizer.graph_summary(self.model.net)
+
+    def test(self):
+        self.test_epoch()
+        self.eval_validate = self.eval_top1.avg
+
 
 
     def train_epoch(self):
@@ -112,5 +119,20 @@ class BaseTrainer:
     def create_optimization(self):
         """
         implement the logic of the optimization
+        """
+        raise NotImplementedError
+
+
+    def test_epoch(self):
+        """
+        implement the logic of epoch:
+        -loop ever the number of iteration in the config and call teh train step
+        """
+        raise NotImplementedError
+
+    def test_step(self):
+        """
+        implement the logic of epoch:
+        -loop ever the number of iteration in the config and call teh train step
         """
         raise NotImplementedError

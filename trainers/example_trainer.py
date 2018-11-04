@@ -96,7 +96,7 @@ class ExampleTrainer(BaseTrainer,object):
         :return: 
         """
         self.optimizer = torch.optim.Adam(self.model.net.parameters(),
-                                          lr=self.config['learning_rate'], weight_decay=0) #lr:1e-4
+                                          lr=self.config['learning_rate'], weight_decay=1e-4) #lr:1e-4
         if torch.cuda.device_count() > 1:
             print('optimizer device_count: ',torch.cuda.device_count())
             self.optimizer = nn.DataParallel(self.optimizer,device_ids=range(torch.cuda.device_count()))
@@ -154,6 +154,18 @@ class ExampleTrainer(BaseTrainer,object):
             acc_arr.append(correct_k.mul_(1.0 / batch_size))
         return acc_arr
 
+    def test_accu(self, output, target, topk=(1,)):
+        maxk = max(topk)
+        batch_size = target.size(0)
+        _, idx = output.topk(maxk, 1, True, True)
+        idx = idx.t()
+        correct = idx.eq(target.view(1, -1).expand_as(idx))
+        acc_arr = []
+        for k in topk:
+            correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
+            acc_arr.append(correct_k.mul_(1.0 / batch_size))
+        return acc_arr,idx[0].cpu().numpy() if torch.cuda.is_available() else idx[0].numpy()
+
 
     def evaluate_epoch(self):
         """
@@ -192,6 +204,46 @@ class ExampleTrainer(BaseTrainer,object):
 
         # measure accuracy and record loss
         prec1, prec5 = self.compute_accuracy(infer.data, labels.data, topk=(1, 5))
+
+        self.eval_losses.update(loss, images.size(0)) # loss.data[0]
+        self.eval_top1.update(prec1[0], images.size(0))
+        self.eval_top5.update(prec5[0], images.size(0))
+
+    def test_epoch(self):
+        self.eval_losses = utils.AverageMeter()
+        self.eval_top1 = utils.AverageMeter()
+        self.eval_top5 = utils.AverageMeter()
+        self.model.net.eval()
+        for batch_idx, (batch_x, batch_y) in enumerate(self.val_loader):
+            if torch.cuda.is_available():
+                batch_x, batch_y = batch_x.cuda(async=self.config['async_loading']), batch_y.cuda(
+                    async=self.config['async_loading'])
+            batch_x_var, batch_y_var = Variable(batch_x), Variable(batch_y)
+            self.test_step(batch_x_var, batch_y_var)
+            utils.view_bar(batch_idx + 1, len(self.val_loader))
+
+
+    def test_step(self, images, labels):
+        """
+        evaluating in a step
+        :param images:
+        :param labels:
+        :return:
+        """
+        infer = self.model.net(images)
+        # label to one_hot
+        # ids = labels.long().view(-1, 1)
+        # one_hot_labels = torch.zeros(32, 2).scatter_(dim=1, index=ids, value=1.)
+
+        # Loss function
+        losses = self.get_loss(infer, labels)
+        loss = losses.item()#losses.data[0]
+
+        # measure accuracy and record loss
+        prec,pred = self.test_accu(infer.data, labels.data, topk=(1, 5))
+        prec1,prec5 = prec[0],prec[1]
+        self.data.extend(infer.data.cpu().numpy() if torch.cuda.is_available() else infer.data.numpy())
+        self.pred.extend(pred)
 
         self.eval_losses.update(loss, images.size(0)) # loss.data[0]
         self.eval_top1.update(prec1[0], images.size(0))

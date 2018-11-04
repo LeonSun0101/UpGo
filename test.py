@@ -1,10 +1,59 @@
-import json
-with open("./AgriculturalDisease_train_annotations.json", 'r') as f:
-    data = json.load(f)
-    image=[]
-    for element in data:
-        #line = line.strip('\n\r').strip('\n').strip('\r')
-        #words = line.split(self.config['file_label_separator'])
-        # single label here so we use int(words[1])
-        image.append((element['image_id'], int(element['disease_class'])))
-print(image[0])
+# coding=utf-8
+import argparse
+import textwrap
+import time
+import os, sys
+sys.path.append(os.path.dirname(__file__))
+from utils.config import process_config, check_config_dict
+from utils.logger import ExampleLogger
+from trainers.example_model import ExampleModel
+from trainers.example_trainer import ExampleTrainer
+from data_loader.dataset import get_data_loader
+import sys
+import utils.global_variable as global_value
+
+config = process_config(os.path.join(os.path.dirname(__file__), 'configs', 'config.json'))
+
+class ImageClassificationTest:
+    def __init__(self, config):
+        gpu_id = config['gpu_id']
+        os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+        os.environ["CUDA_VISIBLE_DEVICES"] = gpu_id
+        print(config)
+        #check_config_dict(config)
+        self.config = config
+        self.init()
+
+
+    def init(self):
+        # create net
+        self.model = ExampleModel(self.config)
+        # load
+        self.model.load()
+        # create your data generator
+        self.train_loader, self.test_loader = get_data_loader(self.config)
+        # create logger
+        self.logger = ExampleLogger(self.config)
+        # create trainer and path all previous components to it
+        self.trainer = ExampleTrainer(self.model, self.train_loader, self.test_loader, self.config, self.logger)
+
+
+    def run(self):
+        # here you train your model
+        self.trainer.test()
+
+
+    def close(self):
+        # close
+        self.logger.close()
+
+
+if __name__ == '__main__':
+    test = ImageClassificationTest(config)
+    test.run()
+    pred = test.trainer.pred
+    data = test.trainer.data
+    import pickle
+    pickle.dump(data,open(test.config['result_data_file'],'wb'))
+    pickle.dump(pred,open(test.config['result_pred_file'],'wb'))
+    test.close()
