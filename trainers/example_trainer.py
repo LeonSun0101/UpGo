@@ -61,10 +61,10 @@ class ExampleTrainer(BaseTrainer,object):
 
         loss = losses.item()#.data[0]
         # measure accuracy and record loss
-        prec1, prec5 = self.compute_accuracy(infer.data, labels.data, topk=(1, 5))
+        prec1 = self.compute_accuracy(infer.data, labels.data, topk=(1,))
         self.train_losses.update(loss, images.size(0))
-        self.train_top1.update(prec1[0], images.size(0))
-        self.train_top5.update(prec5[0], images.size(0))
+        self.train_top1.update(prec1[0][0], images.size(0))
+        # self.train_top5.update(prec1[0], images.size(0))
         # Optimization step
         if torch.cuda.device_count() > 1 and torch.cuda.is_available():
             self.optimizer.module.zero_grad()
@@ -203,11 +203,11 @@ class ExampleTrainer(BaseTrainer,object):
         loss = losses.item()#losses.data[0]
 
         # measure accuracy and record loss
-        prec1, prec5 = self.compute_accuracy(infer.data, labels.data, topk=(1, 5))
+        prec1 = self.compute_accuracy(infer.data, labels.data, topk=(1,))
 
         self.eval_losses.update(loss, images.size(0)) # loss.data[0]
-        self.eval_top1.update(prec1[0], images.size(0))
-        self.eval_top5.update(prec5[0], images.size(0))
+        self.eval_top1.update(prec1[0][0], images.size(0))
+        # self.eval_top5.update(prec1[0][0], images.size(0))
 
     def test_epoch(self):
         self.eval_losses = utils.AverageMeter()
@@ -240,11 +240,11 @@ class ExampleTrainer(BaseTrainer,object):
         loss = losses.item()#losses.data[0]
 
         # measure accuracy and record loss
-        prec,pred = self.test_accu(infer.data, labels.data, topk=(1, 5))
-        prec1,prec5 = prec[0],prec[1]
+        prec, pred = self.test_accu(infer.data, labels.data, topk=(1,))
+        prec1 = prec[0]
         self.data.extend(infer.data.cpu().numpy() if torch.cuda.is_available() else infer.data.numpy())
         self.pred.extend(pred)
 
         self.eval_losses.update(loss, images.size(0)) # loss.data[0]
-        self.eval_top1.update(prec1[0], images.size(0))
-        self.eval_top5.update(prec5[0], images.size(0))
+        self.eval_top1.update(prec1[0][0], images.size(0))
+        # self.eval_top5.update(prec1[0], images.size(0))
