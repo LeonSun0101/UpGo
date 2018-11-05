@@ -10,6 +10,8 @@ from torch.autograd import Variable
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 from data_loader.data_processor import DataProcessor
+from torchvision import transforms as T
+
 
 
 class PyTorchDataset(Dataset):
@@ -36,8 +38,8 @@ class PyTorchDataset(Dataset):
         fn, label = self.imgs[index]
         _root_dir = self.config['train_data_root_dir'] if self.is_train_set else self.config['val_data_root_dir']
         image = self.self_defined_loader(os.path.join(_root_dir, fn))
-        if self.transform is not None:
-            image = self.transform(image)
+        # if self.transform is not None:
+        #     image = self.transform(image)
 
         return image, label
 
@@ -48,10 +50,28 @@ class PyTorchDataset(Dataset):
 
     def self_defined_loader(self, filename):
         image = self.DataProcessor.image_loader(filename)
-        image = self.DataProcessor.image_resize(image)
+        # image = self.DataProcessor.image_resize(image)
+        from PIL import Image
+        image = Image.fromarray(image)
         if self.is_train_set and self.config['data_aug']:
-            image = self.DataProcessor.data_aug(image)
-        image = self.DataProcessor.input_norm(image)
+            transforms = T.Compose([
+                T.Resize((224, 224)),
+                T.RandomRotation(30),
+                T.RandomHorizontalFlip(),
+                T.RandomVerticalFlip(),
+                T.RandomAffine(45),
+                T.ToTensor(),
+                T.Normalize(mean=[0.485, 0.456, 0.406],
+                            std=[0.229, 0.224, 0.225])])
+        else:
+
+            transforms = T.Compose([
+                T.Resize((224, 224)),
+                T.ToTensor(),
+                T.Normalize(mean=[0.485, 0.456, 0.406],
+                            std=[0.229, 0.224, 0.225])])
+        image  = transforms(image)
+        # image = self.DataProcessor.input_norm(image)
         return image
 
 
