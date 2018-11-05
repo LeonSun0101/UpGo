@@ -24,7 +24,7 @@ class PyTorchDataset(Dataset):
             data = json.load(f)
             for element in data:
                 if int(element['disease_class']) in disease:
-                    imgs.append((element['image_id'], int(element['disease_class'])))
+                    imgs.append((element['image_id'], int(element['degree']) - 1))
 
         self.DataProcessor = DataProcessor(self.config)
         self.imgs = imgs
