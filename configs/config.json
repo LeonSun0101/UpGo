@@ -1,11 +1,11 @@
 {
-  "model_module_name": "senet_module",
-  "model_net_name": "se_resnet50",
+  "model_module_name": "resnet_module",
+  "model_net_name": "resnet50",
   "gpu_id": "0",
   "async_loading": true,
   "is_tensorboard": true,
   "evaluate_before_train": true,
-  "shuffle": true,
+  "shuffle": false,
   "data_aug": true,
 
   "num_epochs": 100,
@@ -14,26 +14,25 @@
   "num_channels": 3,
   "num_classes": 61,
   "batch_size": 64,
-  "dataloader_workers": 10,
+  "dataloader_workers": 0,
   "learning_rate": 1e-5,
   "learning_rate_decay": 0.9,
   "learning_rate_decay_epoch": 10,
-
-  "train_mode": "finetune",
+  "train_mode": "fromstratch",
   "file_label_separator": "----",
-  "pretrained_path": "/python_project/single_model/senet",
-  "pretrained_file": "val_eval_best.pth",
+  "pretrained_path": "/Users/lidandan/Downloads",
+  "pretrained_file": "resnet50-19c8e357.pth",
   "save_path": "/python_project/single_model/senet",
   "save_name": "model.pth",
   "train_eval_best":"train_eval_best.pth",
   "val_eval_best":"val_eval_best.pth",
-
-  "val_data_root_dir": "/python_project/AgriculturalDisease_validationset/images",
-  "train_data_root_dir": "/python_project/AgriculturalDisease_trainingset/images",
-  "val_data_file": "/python_project/valid_multi_labels_all.json",
-  "train_data_file": "/python_project/train_multi_labels_all.json",
+  "val_data_root_dir": "/Users/lidandan/Documents/others_pro/ai_challenger_pdr2018_trainingset_20181023/AgriculturalDisease_trainingset/images",
+  "train_data_root_dir": "/Users/lidandan/Documents/others_pro/ai_challenger_pdr2018_trainingset_20181023/AgriculturalDisease_trainingset/images",
+  "val_data_file": "/Users/lidandan/Documents/demo.json",
+  "train_data_file": "/Users/lidandan/Documents/demo.json",
   "result_data_file":"/python_project/single_model/senet/senet_valid_data.json",
-  "result_pred_file":"/python_project/single_model/senet/senet_valid_pred.json"
+  "result_pred_file": "/python_project/single_model/senet/senet_valid_pred.json",
+  "disease_class": []
 
 
 }

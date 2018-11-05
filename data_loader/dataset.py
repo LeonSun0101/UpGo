@@ -19,13 +19,12 @@ class PyTorchDataset(Dataset):
                  target_transform=None,  is_train_set=True):
         self.config = config
         imgs = []
+        disease = self.config['disease_class']
         with open(txt,'r') as f:
             data = json.load(f)
             for element in data:
-                #line = line.strip('\n\r').strip('\n').strip('\r')
-                #words = line.split(self.config['file_label_separator'])
-                # single label here so we use int(words[1])
-                imgs.append((element['image_id'], int(element['disease_class'])))
+                if int(element['disease_class']) in disease:
+                    imgs.append((element['image_id'], int(element['disease_class'])))
 
         self.DataProcessor = DataProcessor(self.config)
         self.imgs = imgs
