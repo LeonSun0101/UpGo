@@ -54,7 +54,7 @@ class PyTorchDataset(Dataset):
         image = Image.fromarray(image)
         if self.is_train_set and self.config['data_aug']:
             transforms = T.Compose([
-                T.Resize((224, 224)),
+                T.Resize((650, 650)),
                 T.RandomRotation(30),
                 T.RandomHorizontalFlip(),
                 T.RandomVerticalFlip(),
@@ -65,7 +65,7 @@ class PyTorchDataset(Dataset):
         else:
 
             transforms = T.Compose([
-                T.Resize((224, 224)),
+                T.Resize((650, 650)),
                 T.ToTensor(),
                 T.Normalize(mean=[0.485, 0.456, 0.406],
                             std=[0.229, 0.224, 0.225])])

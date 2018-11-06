@@ -19,6 +19,8 @@ class ExampleModel(BaseModel,object):
 
     def create_model(self):
         self.net = self.interface.create_model(num_classes=self.config['num_classes'])
+        self.net.avgpool = nn.AdaptiveAvgPool2d(1)
+        self.net.fc = nn.Linear(2048, self.config['num_classes'])
         if torch.cuda.is_available():
             self.net.cuda()
 
@@ -54,7 +56,9 @@ class ExampleModel(BaseModel,object):
 
     def _load(self):
         _state_dict = torch.load(os.path.join(self.config['pretrained_path'], self.config['pretrained_file']),
-                                map_location=None)
+                                 map_location=None) if torch.cuda.is_available() \
+            else torch.load(os.path.join(self.config['pretrained_path'],
+                                         self.config['pretrained_file']), map_location='cpu')
         # for multi-gpus
         state_dict = OrderedDict()
         for item, value in _state_dict.items():
