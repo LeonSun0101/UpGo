@@ -27,12 +27,12 @@ class ImageClassificationPytorch:
 
 
     def init(self):
+        # create your data generator
+        self.train_loader, self.test_loader = get_data_loader(self.config)
         # create net
         self.model = ExampleModel(self.config)
         # load
         self.model.load()
-        # create your data generator
-        self.train_loader, self.test_loader = get_data_loader(self.config)
         # create logger
         self.logger = ExampleLogger(self.config)
         # create trainer and path all previous components to it
@@ -51,8 +51,8 @@ class ImageClassificationPytorch:
 
 def main():
     global_value._init()
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
+    # reload(sys)
+    # sys.setdefaultencoding("utf-8")
     imageClassificationPytorch = ImageClassificationPytorch(config)
     imageClassificationPytorch.run()
     imageClassificationPytorch.close()

@@ -1,49 +1,37 @@
 # -*- coding: utf-8 -*-
 
 import os
-import cv2
-import copy
-import numpy as np
-import torch
 import json
-from torch.autograd import Variable
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
 from data_loader.data_processor import DataProcessor
-
+import h5py
+import numpy as np
 
 class PyTorchDataset(Dataset):
     def __init__(self, txt, config, transform=None, loader = None,
                  target_transform=None,  is_train_set=True):
+        self.data = h5py.File(txt,'r')
+        self.sen2 = self.data['sen2'][:,:,:,1:4]
+        self.label = np.argmax(self.data['label'],axis=1)
         self.config = config
-        imgs = []
-        with open(txt,'r') as f:
-            data = json.load(f)
-            for element in data:
-                #line = line.strip('\n\r').strip('\n').strip('\r')
-                #words = line.split(self.config['file_label_separator'])
-                # single label here so we use int(words[1])
-                imgs.append((element['image_id'], int(element['disease_class'])))
-
         self.DataProcessor = DataProcessor(self.config)
-        self.imgs = imgs
         self.transform = transform
         self.target_transform = target_transform
         self.is_train_set = is_train_set
 
 
     def __getitem__(self, index):
-        fn, label = self.imgs[index]
-        _root_dir = self.config['train_data_root_dir'] if self.is_train_set else self.config['val_data_root_dir']
-        image = self.self_defined_loader(os.path.join(_root_dir, fn))
+        label = self.label.__getitem__(index)
+        image = self.sen2.__getitem__(index)
+        image = self.self_defined_loader(image)
         if self.transform is not None:
             image = self.transform(image)
-
         return image, label
 
 
     def __len__(self):
-        return len(self.imgs)
+        return self.sen2.shape[0]
 
 
     def self_defined_loader(self, filename):

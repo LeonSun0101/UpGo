@@ -4,7 +4,7 @@ import os, sys
 import numpy as np
 import logging
 import utils
-import logger_summarizer
+from utils import logger_summarizer
 
 class ExampleLogger:
     """

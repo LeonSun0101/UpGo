@@ -3,7 +3,7 @@
 import random
 import numpy as np
 import cv2
-import scipy.misc as misc
+from PIL import Image
 from data_loader.data_augmentation import DataAugmenters
 
 
@@ -20,15 +20,15 @@ class DataProcessor:
         self.config = config
         self.DataAugmenters = DataAugmenters(self.config)
 
-    def image_loader(self, filename, **kwargs):
+    def image_loader(self, image_data, **kwargs):
         """
         load your image data
         :param filename: 
         :return: 
         """
-        image = cv2.imread(filename)
+        image = Image.fromarray(np.flip(image_data.astype('unit'),axis=2),'RGB')
         if image is None:
-            raise ValueError('image data is none when cv2.imread!')
+            raise ValueError('image data is none when read!')
         return image
 
 
